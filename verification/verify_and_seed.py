@@ -4,12 +4,12 @@ def verify_app():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-
+        
         # 1. Seed the database
         print("Navigating to home to seed...")
         page.goto("http://localhost:5173/")
         page.wait_for_timeout(2000)
-
+        
         # Click the seed button
         try:
             page.click("#seed-btn")
@@ -23,12 +23,12 @@ def verify_app():
         page.wait_for_timeout(3000)
         page.screenshot(path="verification/1_home_after_seed.png")
         print("Home after seed screenshot taken.")
-
+        
         # Verify products are present
         products = page.locator("text=Ver Detalle")
         count = products.count()
         print(f"Found {count} products on home page.")
-
+        
         if count == 0:
             print("No products found! Seeding might have failed or products are not loading.")
             browser.close()
@@ -59,13 +59,13 @@ def verify_app():
         page.wait_for_timeout(2000)
         page.screenshot(path="verification/4_cart.png")
         print("Cart screenshot taken.")
-
+        
         # 5. Go to checkout
         print("Going to checkout...")
         page.click("text=Terminar Compra")
         page.wait_for_timeout(2000)
         page.screenshot(path="verification/5_checkout.png")
-
+        
         # 6. Fill checkout form
         print("Filling checkout...")
         page.fill("input[type='text']:nth-of-type(1)", "Juan Perez") # Name (assuming order based on code)
@@ -78,9 +78,9 @@ def verify_app():
         page.locator("label:has-text('Email:') input").fill("juan@example.com")
         # Confirm Email
         page.locator("label:has-text('Confirmar Email') input").fill("juan@example.com")
-
+        
         page.screenshot(path="verification/6_checkout_filled.png")
-
+        
         # Submit
         print("Submitting order...")
         page.click("text=Generar Orden")

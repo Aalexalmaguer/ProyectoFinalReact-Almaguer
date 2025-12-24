@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { db } from '../../firebase/config';
 import { collection, addDoc, Timestamp, writeBatch, documentId, query, where, getDocs } from 'firebase/firestore';
+import './Checkout.css';
 
 const Checkout = () => {
     const [loading, setLoading] = useState(false);
     const [orderId, setOrderId] = useState('');
-
+    
     // User form state
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [emailConfirm, setEmailConfirm] = useState('');
 
-    const { cart, totalQuantity, totalPrice, clearCart } = useCart();
+    const { cart, totalPrice, clearCart } = useCart();
 
     const createOrder = async ({ name, phone, email }) => {
         setLoading(true);
@@ -60,6 +61,7 @@ const Checkout = () => {
             } else {
                 console.error('Hay productos que están fuera de stock');
                 // Could show a message to the user here listing out of stock items
+                alert("Algunos productos no tienen stock suficiente.");
             }
 
         } catch (error) {
@@ -71,7 +73,7 @@ const Checkout = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        
         if (email !== emailConfirm) {
             alert("Los emails no coinciden");
             return;
@@ -85,43 +87,44 @@ const Checkout = () => {
     };
 
     if (loading) {
-        return <h1>Se está generando su orden...</h1>;
+        return <h2 className="text-center">Se está generando su orden...</h2>;
     }
 
     if (orderId) {
         return (
-            <div>
-                <h1>El id de su orden es: {orderId}</h1>
-                <p>Gracias por su compra.</p>
+            <div className="checkout-success text-center">
+                <h1>¡Gracias por su compra!</h1>
+                <p>El ID de su orden es:</p>
+                <div className="order-id">{orderId}</div>
             </div>
         );
     }
 
     if (cart.length === 0) {
-        return <h1>No hay items en el carrito para comprar.</h1>
+        return <h2 className="text-center">No hay items en el carrito para comprar.</h2>
     }
 
     return (
-        <div>
-            <h1>Checkout</h1>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', margin: '0 auto' }}>
-                <label>
-                    Nombre:
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-                </label>
-                <label>
-                    Teléfono:
-                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-                </label>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </label>
-                <label>
-                    Confirmar Email:
-                    <input type="email" value={emailConfirm} onChange={(e) => setEmailConfirm(e.target.value)} required />
-                </label>
-                <button type="submit" disabled={cart.length === 0} style={{ marginTop: '20px' }}>Generar Orden</button>
+        <div className="checkout-container">
+            <h2>Finalizar Compra</h2>
+            <form onSubmit={handleSubmit} className="checkout-form">
+                <div className="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Tu nombre completo" />
+                </div>
+                <div className="form-group">
+                    <label>Teléfono:</label>
+                    <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="Tu número de teléfono" />
+                </div>
+                <div className="form-group">
+                    <label>Email:</label>
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Tu email" />
+                </div>
+                <div className="form-group">
+                    <label>Confirmar Email:</label>
+                    <input type="email" value={emailConfirm} onChange={(e) => setEmailConfirm(e.target.value)} required placeholder="Confirma tu email" />
+                </div>
+                <button type="submit" className="btn-primary" disabled={cart.length === 0}>Generar Orden</button>
             </form>
         </div>
     );

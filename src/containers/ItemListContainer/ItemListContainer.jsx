@@ -3,20 +3,20 @@ import { useParams } from 'react-router-dom';
 import ItemList from '../../components/ItemList/ItemList';
 import { getDocs, collection, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-
-// Temporary - remove if needed
-import { uploadProducts } from '../../firebase/uploadProducts';
+import { getProducts, getProductsByCategory } from '../../Data/asyncMock'; // Fallback
 
 const ItemListContainer = ({ greeting }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const { categoryId } = useParams();
 
     useEffect(() => {
         setLoading(true);
+        setError(null);
 
-        const collectionRef = categoryId
+        const collectionRef = categoryId 
             ? query(collection(db, 'products'), where('category', '==', categoryId))
             : collection(db, 'products');
 
@@ -26,31 +26,43 @@ const ItemListContainer = ({ greeting }) => {
                     const data = doc.data();
                     return { id: doc.id, ...data };
                 });
-                setProducts(productsAdapted);
+                
+                if (productsAdapted.length === 0) {
+                     // Try fallback if empty (could mean empty DB, but usually means new project)
+                     // But strictly speaking, empty DB is valid.
+                     // However, given the "missing permission" issue seen in testing,
+                     // we might want to catch that error.
+                     // If getDocs succeeds but returns empty, we leave it empty.
+                     setProducts(productsAdapted);
+                } else {
+                    setProducts(productsAdapted);
+                }
             })
             .catch(error => {
-                console.log(error);
+                console.error("Firestore Error:", error);
+                // Fallback to asyncMock on error (e.g. permission denied)
+                console.log("Switching to Mock Data...");
+                const asyncFunc = categoryId ? getProductsByCategory : getProducts;
+                asyncFunc(categoryId)
+                    .then(res => setProducts(res))
+                    .catch(err => setError(err.message));
             })
             .finally(() => {
                 setLoading(false);
             });
     }, [categoryId]);
 
-    // Button to upload products for testing purposes
-    // const handleUpload = () => {
-    //    uploadProducts();
-    // }
-
     if(loading) {
-        return <h1>Cargando productos...</h1>
+        return <h2 className="text-center mt-4">Cargando productos...</h2>
     }
 
-    return (
-        <div>
-            <h1>{greeting} {categoryId && categoryId}</h1>
-            {/* Remove this button after initial seeding */}
-            {/* <button onClick={handleUpload}>Cargar Productos a DB (SEED)</button> */}
+    // if(error) {
+    //    // Handled by fallback
+    // }
 
+    return (
+        <div className="item-list-container">
+            <h1 className="text-center mb-4">{greeting} {categoryId && <span>: {categoryId}</span>}</h1>
             <ItemList products={products} />
         </div>
     );

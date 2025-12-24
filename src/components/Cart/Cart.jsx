@@ -7,27 +7,40 @@ const Cart = () => {
 
     if (cart.length === 0) {
         return (
-            <div className="cart-container">
-                <h1>No hay items en el carrito</h1>
-                <Link to="/" className="Option">Productos</Link>
+            <div className="cart-empty text-center">
+                <h2>No hay items en el carrito</h2>
+                <Link to="/" className="btn-primary">Volver a Productos</Link>
             </div>
         );
     }
 
     return (
         <div className="cart-container">
-            {cart.map(p => (
-                <div key={p.id} className="cart-item">
-                    <h3>{p.name}</h3>
-                    <p>Cantidad: {p.quantity}</p>
-                    <p>Precio x unidad: ${p.price}</p>
-                    <p>Subtotal: ${p.quantity * p.price}</p>
-                    <button onClick={() => removeItem(p.id)} className="Button">X</button>
+            <h2>Carrito de Compras</h2>
+            <div className="cart-items">
+                {cart.map(p => (
+                    <div key={p.id} className="cart-item-row">
+                        <div className="cart-item-info">
+                            <h3>{p.name}</h3>
+                            <span className="price">${p.price}</span>
+                        </div>
+                        <div className="cart-item-quantity">
+                            <span>Cant: {p.quantity}</span>
+                        </div>
+                        <div className="cart-item-subtotal">
+                            <span>Subtotal: ${p.quantity * p.price}</span>
+                        </div>
+                        <button onClick={() => removeItem(p.id)} className="btn-remove">Eliminar</button>
+                    </div>
+                ))}
+            </div>
+            <div className="cart-summary">
+                <h3>Total: ${totalPrice()}</h3>
+                <div className="cart-actions">
+                    <button onClick={() => clearCart()} className="btn-danger">Limpiar Carrito</button>
+                    <Link to="/checkout" className="btn-primary">Terminar Compra</Link>
                 </div>
-            ))}
-            <h3>Total: ${totalPrice()}</h3>
-            <button onClick={() => clearCart()} className="Button">Limpiar Carrito</button>
-            <Link to="/checkout" className="Option">Terminar Compra</Link>
+            </div>
         </div>
     );
 };

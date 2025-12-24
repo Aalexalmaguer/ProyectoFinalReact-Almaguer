@@ -78,8 +78,8 @@ const products = [
 
 export const uploadProducts = async () => {
     const productsCollection = collection(db, "products");
-
-    // Check if products exist to avoid duplicates?
+    
+    // Check if products exist to avoid duplicates? 
     // For now, let's just upload them. In a real app we might want to check.
     // However, for this task, I'll just iterate and add.
 

@@ -1,42 +1,88 @@
+// Using the products provided in the prompt for consistency
 const products = [
-    { 
-        id: '1', 
-        name: 'Camiseta Básica', 
-        price: 250, 
-        category: 'ropa', 
-        img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', 
-        description: 'Camiseta de algodón 100% de alta calidad.' 
+    {
+        id: '1',
+        name: "Camiseta Básica Blanca",
+        price: 1500,
+        category: "ropa",
+        stock: 20,
+        description: "Camiseta de algodón 100% de alta calidad, corte clásico y transpirable.",
+        img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=60"
     },
-    { 
-        id: '2', 
-        name: 'Jeans Slim Fit', 
-        price: 800, 
-        category: 'ropa', 
-        img: 'https://images.unsplash.com/photo-1542272617-08f08315805d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', 
-        description: 'Pantalones vaqueros corte moderno.' 
+    {
+        id: '2',
+        name: "Jeans Slim Fit Azul",
+        price: 4500,
+        category: "ropa",
+        stock: 15,
+        description: "Pantalones de mezclilla corte ajustado, elásticos y resistentes.",
+        img: "https://images.unsplash.com/photo-1542272617-08f08315805d?auto=format&fit=crop&w=500&q=60"
     },
-    { 
-        id: '3', 
-        name: 'Zapatillas Urbanas', 
-        price: 1200, 
-        category: 'calzado', 
-        img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', 
-        description: 'Zapatillas cómodas para el día a día.' 
+    {
+        id: '3',
+        name: "Chaqueta de Cuero Sintético",
+        price: 8900,
+        category: "ropa",
+        stock: 5,
+        description: "Estilo urbano y moderno, ideal para temporadas de otoño e invierno.",
+        img: "https://images.unsplash.com/photo-1551028919-ac66e6a39d7e?auto=format&fit=crop&w=500&q=60"
     },
-    { 
-        id: '4', 
-        name: 'Gorra Vintage', 
-        price: 300, 
-        category: 'accesorios', 
-        img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', 
-        description: 'Gorra estilo retro ajustable.' 
+    {
+        id: '4',
+        name: "Auriculares Bluetooth Pro",
+        price: 3200,
+        category: "electronica",
+        stock: 50,
+        description: "Cancelación de ruido activa y batería de larga duración (24h).",
+        img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=60"
     },
+    {
+        id: '5',
+        name: "Smartwatch Deportivo",
+        price: 5500,
+        category: "electronica",
+        stock: 12,
+        description: "Resistente al agua, monitor de ritmo cardíaco y GPS integrado.",
+        img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+        id: '6',
+        name: "Teclado Mecánico RGB",
+        price: 7800,
+        category: "electronica",
+        stock: 8,
+        description: "Switches azules para mayor respuesta táctil e iluminación personalizable.",
+        img: "https://images.unsplash.com/photo-1587829741301-dc798b91a05c?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+        id: '7',
+        name: "Lámpara de Escritorio LED",
+        price: 2100,
+        category: "hogar",
+        stock: 30,
+        description: "Luz regulable con protección ocular y diseño minimalista.",
+        img: "https://images.unsplash.com/photo-1507473888900-52e1adad54ac?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+        id: '8',
+        name: "Maceta de Cerámica Moderna",
+        price: 1200,
+        category: "hogar",
+        stock: 25,
+        description: "Diseño geométrico blanco, perfecta para suculentas y plantas de interior.",
+        img: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=500&q=60"
+    },
+    {
+        id: '9',
+        name: "Juego de Sábanas Queen",
+        price: 4000,
+        category: "hogar",
+        stock: 10,
+        description: "Algodón egipcio de 400 hilos, suavidad y durabilidad garantizada.",
+        img: "https://images.unsplash.com/photo-1522771753035-4a53c62181be?auto=format&fit=crop&w=500&q=60"
+    }
 ];
 
-/**
- * Returns a promise that resolves with the list of all products after a delay.
- * @returns {Promise<Array<Object>>} Promise resolving to an array of product objects.
- */
 export const getProducts = () => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -45,11 +91,6 @@ export const getProducts = () => {
     });
 };
 
-/**
- * Returns a product by its ID.
- * @param {string} productId - The ID of the product to retrieve.
- * @returns {Promise<Object|null>} Resolves with the product object if found, otherwise resolves with null.
- */
 export const getProductById = (productId) => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -59,11 +100,6 @@ export const getProductById = (productId) => {
     });
 };
 
-/**
- * Returns a promise that resolves with the list of products matching the given category after a delay.
- * @param {string} categoryId - The category to filter products by.
- * @returns {Promise<Array<Object>>} Promise resolving to an array of product objects.
- */
 export const getProductsByCategory = (categoryId) => {
     return new Promise((resolve) => {
         setTimeout(() => {

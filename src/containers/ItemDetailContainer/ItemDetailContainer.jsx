@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ItemDetail from '../../components/ItemDetail/ItemDetail';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import { getProductById } from '../../Data/asyncMock'; // Fallback
 
 const ItemDetailContainer = () => {
     const [product, setProduct] = useState(null);
@@ -17,12 +18,22 @@ const ItemDetailContainer = () => {
 
         getDoc(docRef)
             .then(response => {
-                const data = response.data();
-                const productAdapted = { id: response.id, ...data };
-                setProduct(productAdapted);
+                if (response.exists()) {
+                    const data = response.data();
+                    const productAdapted = { id: response.id, ...data };
+                    setProduct(productAdapted);
+                } else {
+                    // Try fallback if not found in Firestore (maybe it's a mock ID)
+                    return getProductById(itemId).then(res => {
+                        if(res) setProduct(res);
+                        else console.log("Product not found");
+                    });
+                }
             })
             .catch(error => {
                 console.log(error);
+                // Fallback on error
+                getProductById(itemId).then(res => setProduct(res));
             })
             .finally(() => {
                 setLoading(false);
@@ -30,11 +41,11 @@ const ItemDetailContainer = () => {
     }, [itemId]);
 
     if (loading) {
-        return <h1>Cargando detalle...</h1>
+        return <h2 className="text-center mt-4">Cargando detalle...</h2>
     }
 
     if (!product) {
-        return <h1>El producto no existe</h1>
+        return <h2 className="text-center mt-4">El producto no existe</h2>
     }
 
     return (

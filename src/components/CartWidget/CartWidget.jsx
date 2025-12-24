@@ -1,16 +1,17 @@
-import {ShoppingCart} from 'lucide-react';
-
-/* Componente del icono del carrito de compras */
+import { useCart } from '../../context/CartContext';
+import { ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CartWidget = () => {
+    const { totalQuantity } = useCart();
+    const quantity = totalQuantity();
+
     return (
-        <div className="flexitems-center cursor-pointer hover:text-blue-500 transition-colors"> 
-            <ShoppingCart size={24}/>
-            <span className="ml-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                3
-            </span>
-        </div>
+        <Link to='/cart' style={{ display: quantity > 0 ? 'flex' : 'none', alignItems: 'center', textDecoration: 'none', color: 'black' }}>
+             <ShoppingCart size={24} />
+             <span style={{ marginLeft: '5px' }}>{quantity}</span>
+        </Link>
     );
-}
+};
 
 export default CartWidget;

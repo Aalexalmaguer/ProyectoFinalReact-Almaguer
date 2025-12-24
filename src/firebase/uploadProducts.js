@@ -1,7 +1,8 @@
-// Using the products provided in the prompt for consistency
+import { db } from "./config";
+import { collection, addDoc } from "firebase/firestore";
+
 const products = [
     {
-        id: '1',
         name: "Camiseta Básica Blanca",
         price: 1500,
         category: "ropa",
@@ -10,7 +11,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '2',
         name: "Jeans Slim Fit Azul",
         price: 4500,
         category: "ropa",
@@ -19,7 +19,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1542272617-08f08315805d?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '3',
         name: "Chaqueta de Cuero Sintético",
         price: 8900,
         category: "ropa",
@@ -28,7 +27,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1551028919-ac66e6a39d7e?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '4',
         name: "Auriculares Bluetooth Pro",
         price: 3200,
         category: "electronica",
@@ -37,7 +35,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '5',
         name: "Smartwatch Deportivo",
         price: 5500,
         category: "electronica",
@@ -46,7 +43,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '6',
         name: "Teclado Mecánico RGB",
         price: 7800,
         category: "electronica",
@@ -55,7 +51,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1587829741301-dc798b91a05c?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '7',
         name: "Lámpara de Escritorio LED",
         price: 2100,
         category: "hogar",
@@ -64,7 +59,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1507473888900-52e1adad54ac?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '8',
         name: "Maceta de Cerámica Moderna",
         price: 1200,
         category: "hogar",
@@ -73,7 +67,6 @@ const products = [
         img: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=500&q=60"
     },
     {
-        id: '9',
         name: "Juego de Sábanas Queen",
         price: 4000,
         category: "hogar",
@@ -83,27 +76,18 @@ const products = [
     }
 ];
 
-export const getProducts = () => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-        resolve(products);
-        }, 1000);
-    });
-};
+export const uploadProducts = async () => {
+    const productsCollection = collection(db, "products");
 
-export const getProductById = (productId) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const product = products.find(prod => prod.id === productId);
-            resolve(product ? product : null);
-        }, 1000);
-    });
-};
+    // Check if products exist to avoid duplicates?
+    // For now, let's just upload them. In a real app we might want to check.
+    // However, for this task, I'll just iterate and add.
 
-export const getProductsByCategory = (categoryId) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(products.filter(prod => prod.category === categoryId));
-        }, 1000);
-    });
+    try {
+        const promises = products.map((product) => addDoc(productsCollection, product));
+        await Promise.all(promises);
+        console.log("Productos subidos correctamente!");
+    } catch (error) {
+        console.error("Error al subir productos:", error);
+    }
 };

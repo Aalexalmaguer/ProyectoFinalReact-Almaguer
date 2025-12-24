@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProductById } from '../../Data/asyncMock';
 import ItemDetail from '../../components/ItemDetail/ItemDetail';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { getProductById } from '../../Data/asyncMock'; // Fallback
 
 const ItemDetailContainer = () => {
     const [product, setProduct] = useState(null);
@@ -11,32 +13,46 @@ const ItemDetailContainer = () => {
 
     useEffect(() => {
         setLoading(true);
-    
-        getProductById(itemId)
+
+        const docRef = doc(db, 'products', itemId);
+
+        getDoc(docRef)
             .then(response => {
-                setProduct(response);
+                if (response.exists()) {
+                    const data = response.data();
+                    const productAdapted = { id: response.id, ...data };
+                    setProduct(productAdapted);
+                } else {
+                    // Try fallback if not found in Firestore (maybe it's a mock ID)
+                    return getProductById(itemId).then(res => {
+                        if(res) setProduct(res);
+                        else console.log("Product not found");
+                    });
+                }
             })
             .catch(error => {
-                console.error(error);
+                console.log(error);
+                // Fallback on error
+                getProductById(itemId).then(res => setProduct(res));
             })
             .finally(() => {
                 setLoading(false);
             });
-        }, [itemId]);
+    }, [itemId]);
 
-        if (loading) {
-            return <h1 className="text-center mt-10 text-xl font-bold">Cargando detalle...</h1>;
-        }
+    if (loading) {
+        return <h2 className="text-center mt-4">Cargando detalle...</h2>
+    }
 
-        if (!product) {
-            return <h1 className="text-center mt-10 text-xl text-red-500">Producto no encontrado</h1>;
-        }
+    if (!product) {
+        return <h2 className="text-center mt-4">El producto no existe</h2>
+    }
 
-        return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <ItemDetail {...product} />
-            </div>
-        );
+    return (
+        <div className='ItemDetailContainer'>
+            <ItemDetail {...product} />
+        </div>
+    );
 };
 
 export default ItemDetailContainer;

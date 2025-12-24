@@ -75,16 +75,15 @@ service cloud.firestore {
   }
 }
 
-![alt text](image.png)
-![alt text](image-1.png)
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
-![alt text](image-5.png)
-![alt text](image-6.png)
-![alt text](image-7.png)
-![alt text](image-8.png)
-
+![producto 1](src/assets/image.png)
+![producto 2](src/assets/image-1.png)
+![producto 3](src/assets/image-2.png)
+![producto 4](src/assets/image-3.png)
+![producto 5](src/assets/image-4.png)
+![producto 6](src/assets/image-5.png)
+![producto 7](src/assets/image-6.png)
+![producto 8](src/assets/image-7.png)
+![producto 9](src/assets/image-8.png)
 
 🏗️ Estructura del Proyecto
 La arquitectura sigue el patrón de separación entre Contenedores (lógica) y Componentes de Presentación (UI).
